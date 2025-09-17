@@ -1,11 +1,10 @@
 
-const post = require('../data/dataBase')
-console.log('Sto importando:', post);
+const connection = require('../data/dataBase')
 
 // porta index
 const index = (req, res) => {
   const sql = 'SELECT * FROM posts';
-  post.query(sql, (err, results) => {
+  connection.query(sql, (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Errore della query: " + err });
     }
@@ -31,9 +30,16 @@ const modify = (req, res) => {
 };
 // porta destroy
 const destroy = (req, res) => {
-
+  const id = req.params.id;
+  const sql = 'DELETE from posts WHERE id = ?'
+  connection.query(sql, [id], (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Errore della query: " + err });
+    }
+    res.sendStatus(204);
+  });
 };
-// esporto
+
 module.exports = {
   index,
   show,
